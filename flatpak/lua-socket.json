@@ -1,0 +1,28 @@
+{
+    "name" : "lua-socket",
+    "buildsystem" : "simple",
+    "build-commands" : [
+        "make LUAV=5.3 OPTFLAGS=\"-fPIC \" LDFLAGS=\"-shared -o \" linux",
+        "make install-unix INSTALL_TOP=/app INSTALL_TOP_CDIR=/app/lib/lua/5.3 INSTALL_TOP_LDIR=/app/share/lua/5.3"
+    ],
+    "sources" : [
+        {
+            "type" : "archive",
+            "url" : "https://github.com/diegonehab/luasocket/archive/v3.0-rc1.tar.gz",
+            "sha256" : "8b67d9b5b545e1b694753dab7bd6cdbc24c290f2b21ba1e14c77b32817ea1249"
+        },
+        {
+            "type" : "patch",
+            "path" : "luasocket-optflags.patch"
+        },
+        {
+            "type" : "patch",
+            "path" : "luasocket-no-global-vars.patch"
+        },
+        {
+            "type" : "patch",
+            "path" : "luasocket-3.0-settimeout.patch"
+        }
+    ],
+    "cleanup" : [ "/bin" ]
+}

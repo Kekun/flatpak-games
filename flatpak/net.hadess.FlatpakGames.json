@@ -1,0 +1,92 @@
+{
+    "app-id" : "net.hadess.FlatpakGames",
+    "runtime" : "org.gnome.Platform",
+    "runtime-version" : "3.28",
+    "sdk" : "org.gnome.Sdk",
+    "command" : "sh",
+    "finish-args" : [
+        "--share=network",
+        "--share=ipc",
+        "--socket=x11",
+        "--socket=wayland",
+        "--filesystem=xdg-run/dconf",
+        "--filesystem=~/.config/dconf:ro",
+        "--talk-name=ca.desrt.dconf",
+        "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
+    ],
+    "build-options" : {
+        "cflags" : "-O2 -g",
+        "cxxflags" : "-O2 -g",
+        "env" : {
+            "V" : "1"
+        }
+    },
+    "cleanup" : [
+        "/include",
+        "/lib/pkgconfig",
+        "/man",
+        "/share/doc",
+        "/share/gtk-doc",
+        "/share/man",
+        "/share/pkgconfig",
+        "*.la",
+        "*.a"
+    ],
+    "modules" : [
+        "org.lua.modules.json",
+        {
+            "name" : "lua-posix",
+            "config-opts" : [
+                "--libdir=/app/lib/lua/5.3",
+                "--datadir=/app/share/lua/5.3"
+            ],
+            "sources" : [
+                {
+                    "type" : "archive",
+                    "url" : "https://github.com/luaposix/luaposix/archive/release-v33.4.0.tar.gz",
+                    "sha256" : "e66262f5b7fe1c32c65f17a5ef5ffb31c4d1877019b4870a5d373e2ab6526a21"
+                }
+            ]
+        },
+        "lua-socket.json",
+        {
+            "name" : "lua-sec",
+            "buildsystem" : "simple",
+            "build-commands" : [
+                "make INC_PATH=-I/app/include LIB_PATH=-L/app/usr/lib linux",
+                "make LUAPATH=/app/share/lua/5.3 LUACPATH=/app/lib/lua/5.3 install"
+            ],
+            "sources" : [
+                {
+                    "type" : "archive",
+                    "url" : "https://github.com/brunoos/luasec/archive/luasec-0.6.tar.gz",
+                    "sha256" : "cef3a35c18beb8a54d9c8ce6260a4cabbd9a386de8711320d084daffad0aed5d"
+                }
+            ]
+        },
+        {
+            "name" : "lua-archive",
+            "buildsystem" : "cmake",
+            "sources" : [
+                {
+                    "type" : "archive",
+                    "url" : "https://github.com/brimworks/lua-archive/archive/version-0.tar.gz",
+                    "sha256" : "95299bd902851d295aaa494bce6c394f60df24259948de13be2adf63a6486a39"
+                }
+            ]
+        },
+        {
+            "name" : "flatpak-games",
+            "buildsystem" : "simple",
+            "build-commands" : [
+                "make check"
+            ],
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://github.com/hadess/flatpak-games.git"
+                }
+            ]
+        }
+    ]
+}
